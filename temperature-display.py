@@ -11,9 +11,8 @@ import os.path
 text = PapirusComposite(False)
 
 # init
-interval = ""
 global_refresh = 0
-interval = 180
+interval = 0
 # drawing stuff
 pos_x = 0
 pos_y = 0
