@@ -1,14 +1,17 @@
 from time import sleep, time
 from datetime import datetime
 from papirus import PapirusComposite
+
 import json
 import pyowm
 import tzlocal
+import sys
+import os.path
 
-owm = pyowm.OWM('')  # You MUST provide a valid API key
 text = PapirusComposite(False)
 
 # init
+interval = ""
 global_refresh = 0
 interval = 180
 # drawing stuff
@@ -16,6 +19,23 @@ pos_x = 0
 pos_y = 0
 fsize = 18
 rot = 0
+
+def config_initialize():
+  global token, interval
+
+  if os.path.isfile(config_file) and os.access(config_file, os.R_OK):
+    with open('config.json') as data_file:
+      data = json.load(data_file)
+      try:
+        token = data["token"]
+      except:
+        sys.exit("Error: couldn't find token in config")
+      try:
+        interval = data["interval"]
+      except:
+        sys.exit("Error: couldn't find interval in config")
+  else:
+    sys.exit("Error: config file is missing or not readable")
 
 def degify():
   return u"\u00b0"
@@ -77,6 +97,9 @@ def fetchweather():
 
 
 def main():
+  global interval, token
+  config_initialize()
+  owm = pyowm.OWM(token)  # You MUST provide a valid API key
   drawlines()
   refresh_weather(0)
   while(1):
