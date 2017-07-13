@@ -9,10 +9,14 @@ import sys
 import os.path
 
 text = PapirusComposite(False)
+owm = ""
 
+# config
+config_file = "config.json"
 # init
+interval = ""
+token = ""
 global_refresh = 0
-interval = 0
 # drawing stuff
 pos_x = 0
 pos_y = 0
@@ -35,6 +39,18 @@ def config_initialize():
         sys.exit("Error: couldn't find interval in config")
   else:
     sys.exit("Error: config file is missing or not readable")
+
+def main():
+  global interval, token, owm
+  config_initialize()
+  owm = pyowm.OWM(token)  # You MUST provide a valid API key
+  drawlines()
+  refresh_weather(0)
+  while(1):
+    now_main = time()
+    if(now_main - global_refresh > interval):
+      refresh_weather(1)
+  sleep(0.1) 
 
 def degify():
   return u"\u00b0"
@@ -95,17 +111,6 @@ def fetchweather():
   return wetterwerte
 
 
-def main():
-  global interval, token
-  config_initialize()
-  owm = pyowm.OWM(token)  # You MUST provide a valid API key
-  drawlines()
-  refresh_weather(0)
-  while(1):
-    now_main = time()
-    if(now_main - global_refresh > interval):
-      refresh_weather(1)
-  sleep(0.1) 
 
 def refresh_weather(var):
   global global_refresh, last_execution, pos_x, pos_y, fsize
