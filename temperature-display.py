@@ -113,69 +113,74 @@ def fetchweather():
 
 
 def refresh_weather(var):
-  global global_refresh, last_execution, pos_x, pos_y, fsize
+  global global_refresh, last_execution, pos_x, pos_y, fsize, owm
   mode = var
   now = datetime.now(tzlocal.get_localzone())
-  results = fetchweather()
+  check_online = owm.is_API_online()
+  if (check_online == True):
+    print("Debug: API seems to be online, going further")
+    results = fetchweather()
 
-  if(mode == 0):
-    print("** DEBUG Initializing")
-    global_refresh = time()
-    timestamp = '{h:02d}:{m:02d}:{s:02d}'.format(h=now.hour, m=now.minute, s=now.second)+" "+now.tzname()
+    if(mode == 0):
+      print("** DEBUG Initializing")
+      global_refresh = time()
+      timestamp = '{h:02d}:{m:02d}:{s:02d}'.format(h=now.hour, m=now.minute, s=now.second)+" "+now.tzname()
 
-    weatherdata1 = str(results['in_temp'])+degify()  ## Temperatur Innen
-    weatherdata2 = str(results['in_hum'])+"%"   ## Luftfeuchte Innen
-    weatherdata3 = str(results['out_temp'])+degify() ## Temperatur Aussen
-    weatherdata4 = str(results['out_hum'])+"%"  ## Luftfeuchte Aussen
-    weatherdata5 = results['arrow']+" "+str(results['wind'])+degify()
-    weatherdata6 = str(results['speed'])+"m/s"
-    weatherdata7 = results['icon']
-    ## Write to Screen
-    text.AddText(weatherdata1, pos_x+5, pos_y+25, fsize+19, invert=False, Id="INNENTEMP")
-    text.AddText(weatherdata2, pos_x+5, pos_y+70, fsize+19, invert=False, Id="INNENHUM")
-    text.AddText(weatherdata3, 140, pos_y+25, fsize+19, invert=False, Id="AUSSENTEMP")
-    text.AddText(weatherdata4, pos_x+140, pos_y+70, fsize+19, invert=False, Id="AUSSENHUM")
-    text.AddText("Wind:", pos_x+140, pos_y+110, fsize, invert=False, Id="WINDINTRO")
-    text.AddText(weatherdata5, pos_x+140, pos_y+130, fsize, invert=False, Id="WINDDEG")
-    text.AddText(weatherdata6, pos_x+140, pos_y+150, fsize, invert=False, Id="WINDSPEED")
-    text.AddText(timestamp, pos_x+5, pos_y+160, fsize-8, invert=False, Id="TIMESTAMP")
-    text.AddImg(weatherdata7,200,40,(50,50), Id="ICON")
-    ## redraw screen
-    text.WriteAll()
-    print("DEBUG __ Temperatur aussen: "+weatherdata3)
-    print("DEBUG __ Luftfeuchte aussen: "+weatherdata4)
-    print("DEBUG __ Windrichtung: "+weatherdata5)
-    print("DEBUG __ Windgeschwindigkeit: "+weatherdata6)
-    print("DEBUG __ Uhrzeit: "+timestamp)
+      weatherdata1 = str(results['in_temp'])+degify()  ## Temperatur Innen
+      weatherdata2 = str(results['in_hum'])+"%"   ## Luftfeuchte Innen
+      weatherdata3 = str(results['out_temp'])+degify() ## Temperatur Aussen
+      weatherdata4 = str(results['out_hum'])+"%"  ## Luftfeuchte Aussen
+      weatherdata5 = results['arrow']+" "+str(results['wind'])+degify()
+      weatherdata6 = str(results['speed'])+"m/s"
+      weatherdata7 = results['icon']
+      ## Write to Screen
+      text.AddText(weatherdata1, pos_x+5, pos_y+25, fsize+19, invert=False, Id="INNENTEMP")
+      text.AddText(weatherdata2, pos_x+5, pos_y+70, fsize+19, invert=False, Id="INNENHUM")
+      text.AddText(weatherdata3, 140, pos_y+25, fsize+19, invert=False, Id="AUSSENTEMP")
+      text.AddText(weatherdata4, pos_x+140, pos_y+70, fsize+19, invert=False, Id="AUSSENHUM")
+      text.AddText("Wind:", pos_x+140, pos_y+110, fsize, invert=False, Id="WINDINTRO")
+      text.AddText(weatherdata5, pos_x+140, pos_y+130, fsize, invert=False, Id="WINDDEG")
+      text.AddText(weatherdata6, pos_x+140, pos_y+150, fsize, invert=False, Id="WINDSPEED")
+      text.AddText(timestamp, pos_x+5, pos_y+160, fsize-8, invert=False, Id="TIMESTAMP")
+      text.AddImg(weatherdata7,200,40,(50,50), Id="ICON")
+      ## redraw screen
+      text.WriteAll()
+      print("DEBUG __ Temperatur aussen: "+weatherdata3)
+      print("DEBUG __ Luftfeuchte aussen: "+weatherdata4)
+      print("DEBUG __ Windrichtung: "+weatherdata5)
+      print("DEBUG __ Windgeschwindigkeit: "+weatherdata6)
+      print("DEBUG __ Uhrzeit: "+timestamp)
 
-  if(mode == 1):
-    print("** DEBUG: Udate Screen")
-    global_refresh = time()
+    if(mode == 1):
+      print("** DEBUG: Udate Screen")
+      global_refresh = time()
 
-    timestamp = '{h:02d}:{m:02d}:{s:02d}'.format(h=now.hour, m=now.minute, s=now.second)+" "+now.tzname()
+      timestamp = '{h:02d}:{m:02d}:{s:02d}'.format(h=now.hour, m=now.minute, s=now.second)+" "+now.tzname()
 
-    weatherdata1 = str(results['in_temp'])+degify()  ## Temperatur Innen
-    weatherdata2 = str(results['in_hum'])+"%"   ## Luftfeuchte Innen
-    weatherdata3 = str(results['out_temp'])+degify() ## Temperatur Aussen
-    weatherdata4 = str(results['out_hum'])+"%"  ## Luftfeuchte Aussen
-    weatherdata5 = results['arrow']+" "+str(results['wind'])+degify()
-    weatherdata6 = str(results['speed'])+"m/s"
-    weatherdata7 = results['icon']
+      weatherdata1 = str(results['in_temp'])+degify()  ## Temperatur Innen
+      weatherdata2 = str(results['in_hum'])+"%"   ## Luftfeuchte Innen
+      weatherdata3 = str(results['out_temp'])+degify() ## Temperatur Aussen
+      weatherdata4 = str(results['out_hum'])+"%"  ## Luftfeuchte Aussen
+      weatherdata5 = results['arrow']+" "+str(results['wind'])+degify()
+      weatherdata6 = str(results['speed'])+"m/s"
+      weatherdata7 = results['icon']
 
-    text.UpdateText("INNENHUM", weatherdata2)
-    text.UpdateText("AUSSENTEMP", weatherdata3)
-    text.UpdateText("AUSSENHUM", weatherdata4)
-    text.UpdateText("WINDDEG", weatherdata5)
-    text.UpdateText("WINDSPEED", weatherdata6)
-    text.UpdateText("TIMESTAMP", timestamp)
-    text.UpdateImg("ICON", weatherdata7)
-    ## redraw screen
-    text.WriteAll()
-    print("DEBUG __ Temperatur aussen: "+weatherdata3)
-    print("DEBUG __ Luftfeuchte aussen: "+weatherdata4)
-    print("DEBUG __ Windrichtung: "+weatherdata5)
-    print("DEBUG __ Windgeschwindigkeit: "+weatherdata6)
-    print("DEBUG __ Uhrzeit: "+timestamp)
+      text.UpdateText("INNENHUM", weatherdata2)
+      text.UpdateText("AUSSENTEMP", weatherdata3)
+      text.UpdateText("AUSSENHUM", weatherdata4)
+      text.UpdateText("WINDDEG", weatherdata5)
+      text.UpdateText("WINDSPEED", weatherdata6)
+      text.UpdateText("TIMESTAMP", timestamp)
+      text.UpdateImg("ICON", weatherdata7)
+      ## redraw screen
+      text.WriteAll()
+      print("DEBUG __ Temperatur aussen: "+weatherdata3)
+      print("DEBUG __ Luftfeuchte aussen: "+weatherdata4)
+      print("DEBUG __ Windrichtung: "+weatherdata5)
+      print("DEBUG __ Windgeschwindigkeit: "+weatherdata6)
+      print("DEBUG __ Uhrzeit: "+timestamp)
+  else:
+    print("DEBUG: API Offline")
 
 def drawlines():
   global text, fsize
