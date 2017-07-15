@@ -7,6 +7,7 @@ import pyowm
 import tzlocal
 import sys
 import os.path
+import redis
 
 text = PapirusComposite(False)
 owm = ""
@@ -40,6 +41,16 @@ def config_initialize():
   else:
     sys.exit("Error: config file is missing or not readable")
 
+def fetch_redis(var):
+  what = var
+  r = redis.Redis(host='localhost', port=6379, db=0)
+  if(what == 0):
+    return(r.get("Temp"))
+  elif(what == 1):
+    return(r.get("Hum"))
+  else:
+    return(0)
+  
 def main():
   global interval, token, owm
   config_initialize()
@@ -106,8 +117,8 @@ def fetchweather():
   wetterwerte['icon'] = "/home/pi/git/code/wetter-display/icons/"+w.get_weather_icon_name()+".png"
   wetterwerte['out_temp'] = int(ktoc(decoded_w['temperature']['temp']))
   wetterwerte['out_hum'] = int(decoded_w['humidity'])
-  wetterwerte['in_temp'] = "24.0"  ## constant, to be replaced with sensor data
-  wetterwerte['in_hum'] = "64.4"   ## constant, to be replaced with sensor data
+  wetterwerte['in_temp'] = fetch_redis(0)  ## constant, to be replaced with sensor data
+  wetterwerte['in_hum'] = fetch_redis(1)    ## constant, to be replaced with sensor data
   return wetterwerte
 
 
@@ -212,4 +223,4 @@ if __name__ == '__main__':
 
 ## https://github.com/PiSupply/PaPiRus
 ## https://openweathermap.org/current
-
+## https://www.modmypi.com/blog/am2302-temphumidity-sensor
