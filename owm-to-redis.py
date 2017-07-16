@@ -7,7 +7,7 @@ import sys
 import os.path
 
 # config
-config_file = "config.json"
+config_file = "/home/pi/git/code/wetter-display/config.json"
 #
 token = ""
 redishost = ""

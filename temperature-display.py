@@ -11,7 +11,8 @@ import redis
 text = PapirusComposite(False)
 
 # config
-config_file = "config.json"
+config_file = "/home/pi/git/code/wetter-display/config.json"
+redishost = ""
 # init
 interval = ""
 global_refresh = 0
@@ -23,11 +24,15 @@ fsize = 18
 rot = 0
 
 def config_initialize():
-    global token, redishost, location
+    global token, redishost, location, interval
 
     if os.path.isfile(config_file) and os.access(config_file, os.R_OK):
         with open(config_file) as data_file:
             data = json.load(data_file)
+            try:
+                interval = data["interval"]
+            except:
+                sys.exit("Error: Couldn't find interval in config file")
             try:
                 redishost = data["redishost"]
             except:
@@ -37,7 +42,7 @@ def config_initialize():
 
 def fetch_redis(var):
     what = var
-    r = redis.Redis(host='localhost', port=6379, db=0)
+    r = redis.Redis(host=redishost, port=6379, db=0)
     if(what == 0):
         return(r.get("Temp"))
     elif(what == 1):
