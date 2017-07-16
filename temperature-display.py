@@ -52,7 +52,7 @@ def fetch_redis(var):
     elif(what == 3):
         return(float(r.get("outHum")))
     elif(what == 4):
-        return(r.get("Wind"))
+        return(int(r.get("Wind")))
     elif(what == 5):
         return(r.get("Speed"))
     elif(what == 6):
