@@ -6,6 +6,7 @@
 ### at different applications, so redis is a good buffer
 
 import redis
+import sys
 import Adafruit_DHT
 
 sensor = 22
